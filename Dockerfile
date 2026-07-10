@@ -1,7 +1,7 @@
 # Dockerfile
 FROM python:3.13-slim
 
-# Installa le dipendenze di sistema necessarie per Playwright
+# Installa le dipendenze di sistema minime (solo quelle essenziali)
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libx11-6 \
@@ -24,18 +24,18 @@ RUN apt-get update && apt-get install -y \
     libatk-bridge2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia i file dei requisiti e installa le dipendenze Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Installa Playwright e i browser
+# Installa Firefox e salta l'installazione delle dipendenze di sistema
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 RUN playwright install firefox
 
-# Copia il resto del codice
+# Disabilita il check delle dipendenze all'avvio
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/render/.cache/ms-playwright
+
 COPY antautosurf_render.py .
 
-# Comando per avviare l'applicazione
 CMD ["python", "antautosurf_render.py"]
