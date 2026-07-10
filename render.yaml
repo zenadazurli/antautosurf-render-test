@@ -2,9 +2,5 @@ services:
   - type: worker
     name: antautosurf-render-test
     runtime: image
-    image:
-      url: renderbase/python-playwright:latest
-    buildCommand: |
-      pip install -r requirements.txt
-      playwright install firefox
+    buildCommand: docker build -t antautosurf .
     startCommand: python antautosurf_render.py
