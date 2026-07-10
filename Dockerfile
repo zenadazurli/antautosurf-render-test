@@ -1,7 +1,7 @@
 # Dockerfile
 FROM python:3.13-slim
 
-# Installa le dipendenze di sistema per Playwright
+# Installa le dipendenze di sistema necessarie per Playwright
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libx11-6 \
@@ -24,15 +24,18 @@ RUN apt-get update && apt-get install -y \
     libatk-bridge2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Installa Python dependencies
+# Imposta la directory di lavoro
+WORKDIR /app
+
+# Copia i file dei requisiti e installa le dipendenze Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Installa Playwright e i browser
-RUN playwright install firefox && playwright install-deps
+RUN playwright install firefox
 
-# Copia lo script
+# Copia il resto del codice
 COPY antautosurf_render.py .
 
-# Avvia lo script
+# Comando per avviare l'applicazione
 CMD ["python", "antautosurf_render.py"]
