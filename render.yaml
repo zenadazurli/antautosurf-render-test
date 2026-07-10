@@ -2,5 +2,6 @@ services:
   - type: worker
     name: antautosurf-render-test
     runtime: image
-    buildCommand: docker build -t antautosurf .
-    startCommand: python antautosurf_render.py
+    repo: https://github.com/zenadazurli/antautosurf-render-test
+    plan: free
+    dockerfilePath: ./Dockerfile
